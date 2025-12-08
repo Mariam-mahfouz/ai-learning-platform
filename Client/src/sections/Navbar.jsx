@@ -5,8 +5,8 @@ import { Link, useLocation } from "react-router-dom";
 function Navigation() {
   const location = useLocation();
 
-  // نخفي الروابط في صفحات Hero و Login و Register
-  const hideLinks = ["/", "/login", "/register"].includes(location.pathname);
+  // نخفي الروابط في صفحات Hero و Login و Register و Team
+  const hideLinks = ["/", "/login", "/register", "/team"].includes(location.pathname);
 
   return (
     <ul className="nav-ul">
@@ -45,7 +45,7 @@ const Navbar = () => {
             href="/"
             className="text-xl font-bold transition-colors text-neutral-400 hover:text-white"
           >
-            ALGO ARCAD
+            ALGO ARCADE
           </a>
           <button
             onClick={() => setIsOpen(!isOpen)}

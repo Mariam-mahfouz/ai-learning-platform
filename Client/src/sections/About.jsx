@@ -177,7 +177,7 @@ const About = () => {
             className="absolute scale-[1.75] -right-[5rem] -top-[1rem] md:scale-[3] md:left-50 md:inset-y-10 lg:scale-[2.5]"
           />
           <div className="z-10">
-            <p className="headtext">At ALGO ARCAD</p>
+            <p className="headtext">At ALGO ARCADE</p>
             <p className="subtext">
               We believe every child deserves the chance to explore programming in a fun and supportive way.
               Our mission is to inspire kids from 9 to 16 to learn, play and create with code.
@@ -190,7 +190,7 @@ const About = () => {
         <div className="grid-default-color grid-2 relative overflow-hidden p-6 rounded-xl md:col-span-2">
           <div ref={grid2Container} className="flex items-center justify-center w-full h-full relative">
             <p className="flex items-end text-5xl text-gray-500 opacity-20 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              ALGO ARCAD
+              ALGO ARCADE
             </p>
             <Card style={{ rotate: "75deg", top: "30%", left: "20%" }} text="Ai" />
             <Card style={{ rotate: "-30deg", top: "60%", left: "45%" }} text="ML" />
