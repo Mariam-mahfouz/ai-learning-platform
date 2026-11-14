@@ -1,9 +1,20 @@
+
 const API = "https://depi-backend-yfok.vercel.app";
 
+/**
+ * Generic request function
+ * @param {string} url - endpoint path (e.g., /auth/register)
+ * @param {string} method - HTTP method (GET, POST, etc.)
+ * @param {object|null} body - request body
+ * @param {boolean} auth - whether to include Authorization header
+ */
 async function request(url, method = "GET", body = null, auth = false) {
-  const headers = { "Content-Type": "application/json" }; // Add Authorization header if authentication is required
-  if (auth)
-    headers["Authorization"] = `Bearer ${localStorage.getItem("token")}`;
+  const headers = { "Content-Type": "application/json" };
+
+  if (auth) {
+    const token = localStorage.getItem("token");
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+  }
 
   try {
     const res = await fetch(API + url, {
@@ -14,11 +25,10 @@ async function request(url, method = "GET", body = null, auth = false) {
 
     const text = await res.text();
     let data;
+
     try {
-      // Attempt to parse JSON response
       data = JSON.parse(text);
     } catch {
-      // If parsing fails, treat the raw text as a message
       data = { message: text };
     }
 
@@ -31,8 +41,7 @@ async function request(url, method = "GET", body = null, auth = false) {
   }
 }
 
-// --- Authentication Exports ---
-
+// --- Authentication ---
 export function register(userData) {
   return request("/auth/register", "POST", userData);
 }
@@ -41,7 +50,7 @@ export function login(userData) {
   return request("/auth/login", "POST", userData);
 }
 
-// CORRECTED: This now takes the email and OTP in the body and uses a POST method.
+// This takes the email and OTP in the body and uses a POST method.
 export function verifyEmail(verificationData) {
   return request("/auth/verify", "POST", verificationData);
 }
@@ -54,8 +63,7 @@ export function resetPassword(resetData) {
   return request("/auth/reset-password", "POST", resetData);
 }
 
-// --- Level & Course Exports ---
-
+// --- Levels & Courses ---
 export function getLevels() {
   return request("/levels/levels", "GET", null, true);
 }
@@ -65,13 +73,10 @@ export function getPurchasedLevels() {
 }
 
 export function createCheckoutSession(levelId) {
-  // Backend requires levelId, userId, price, levelTitle in the body, but
-  // we only send levelId and rely on the backend to look up the rest from the token.
   return request("/stripe/create-checkout-session", "POST", { levelId }, true);
 }
 
-// --- Unit Exports ---
-
+// --- Units ---
 export function getUnits(levelId) {
   return request(`/units/${levelId}/units`, "GET", null, true);
 }

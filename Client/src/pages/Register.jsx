@@ -12,7 +12,7 @@ export default function RegisterPage() {
     password: "",
     mobile: "",
     gender: "",
-    birthday: "2004-01-01",
+    birthday: "01-01-2004",
     role: "user",
   });
 

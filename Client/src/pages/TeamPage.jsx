@@ -1,156 +1,226 @@
-import React from 'react';
+import React from "react";
+import { Link } from "react-router-dom";
 
-// بيانات أعضاء الفريق مع افتراض المسارات المحلية للصور
-// المسارات المفترضة هي: /assets/name.png
-const teamMembers = [
+// Team Images
+import mariamImg from "../assets/Mariam_Mostafa.png";
+import mohamedImg from "../assets/Mohamed_Adel.png";
+import salmaImg from "../assets/Salma_Refat.png";
+import nadineImg from "../assets/Nadeen_Hany.png";
+
+const team = [
   {
-    id: 1,
     name: "Mariam Mostafa",
-    title: "MERN Stack Developer",
-    email: "mariammostafamohammed4@gmail.com",
-    image: "/src/assets/Mariam_Mostafa.png",
-    placeholderColor: "5C33CC", // Royal
-    rating: 5,
+    role: "MERN Stack Developer",
+    description:
+      "Building beautiful and interactive experiences that make learning enjoyable.",
+    image: mariamImg,
+    color: "from-indigo-500 to-purple-600",
   },
   {
-    id: 2,
     name: "Mohamed Adel",
-    title: "MERN Stack Developer",
-    email: "mohamed_adel@gmail.com",
-    image: "/src/assets/mohamed_adel.png",
-    placeholderColor: "CA2F8C", // Fuchsia
-    rating: 5,
+    role: "Backend Developer",
+    description:
+      "Creating powerful systems and reliable technologies behind the platform.",
+    image: mohamedImg,
+    color: "from-purple-500 to-pink-500",
   },
   {
-    id: 3,
-    name: "Salma Refeat",
-    title: "FrontEnd Developer",
-    email: "SalmaRefeat@gmail.com",
-    image: "/src/assets/Salma_Refat.png",
-    placeholderColor: "7A57DB", // Lavender
-    rating: 5,
+    name: "Salma Refat",
+    role: "AI Developer",
+    description:
+      "Turning complex artificial intelligence concepts into simple learning experiences.",
+    image: salmaImg,
+    color: "from-blue-500 to-indigo-600",
   },
   {
-    id: 4,
-    name: "Nadeen Hani",
-    title: "FrontEnd Developer",
-    email: "NadeenHani@gmail.com",
-    image: "/src/assets/Nadeen_Hany.PNG",
-    placeholderColor: "5C33CC",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Ahmed Tawfik",
-    title: "FrontEnd Developer",
-    email: "ah.mo.tawfik@gmail.com",
-    image: "/src/assets/AhmedTawfikPhoto.png",
-    placeholderColor: "CA2F8C",
-    rating: 5,
+    name: "Nadeen Hany",
+    role: "UI/UX Designer",
+    description:
+      "Designing creative interfaces that inspire curiosity and exploration.",
+    image: nadineImg,
+    color: "from-pink-500 to-purple-600",
   },
 ];
 
-// مكون تقييم النجوم
-const StarRating = ({ rating }) => {
-  return (
-    <div className="flex justify-center my-2">
-      {[...Array(5)].map((_, i) => (
-        <svg
-          key={i}
-          className={`w-4 h-4 md:w-5 md:h-5 ${
-            i < rating ? 'text-orange-400' : 'text-neutral-700'
-          }`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.538 1.118l-2.8-2.034a1 1 0 00-1.176 0l-2.8 2.034c-.783.57-1.838-.197-1.538-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.381-1.81.588-1.81h3.462a1 1 0 00.95-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-};
-
-// مكون بطاقة العضو
-const TeamCard = ({ member }) => {
-  // تصميم بطاقة متدرج وداكن
-  const gradientClass = `bg-gradient-to-br from-fuchsia-600/20 via-blue-600/20 to-indigo-600/20`;
-
-  // دالة لتوليد الصورة الاحتياطية (Placeholder)
-  const generatePlaceholder = (name, color) => {
-    const initial = name.substring(0, 1);
-    return `https://placehold.co/150x150/${color}/FFFFFF/png?text=${initial}`;
-  };
-
-  return (
-    <div
-      className={`relative p-4 sm:p-6 shadow-2xl transition-all duration-300 transform 
-                  ${gradientClass} backdrop-blur-sm border border-fuchsia-500/30 
-                  rounded-[2.5rem] hover:shadow-lg hover:-translate-y-2 hover:border-fuchsia-500/50`}
-    >
-      {/* الصورة الدائرية في المنتصف */}
-      <div className="flex justify-center -mt-16 mb-6">
-        <img
-          src={member.image}
-          alt={member.name}
-          className="w-28 h-28 sm:w-32 sm:h-32 rounded-full object-cover border-4 border-teal-400 shadow-xl hover:shadow-2xl transition duration-300"
-          onError={(e) => {
-            e.target.onerror = null; 
-            e.target.src = generatePlaceholder(member.name, member.placeholderColor);
-          }}
-        />
-      </div>
-
-      {/* معلومات العضو */}
-      <div className="text-center text-white">
-        <h3 className="text-xl md:text-2xl font-bold mb-1 text-indigo-300">{member.name}</h3>
-        <p className="text-fuchsia-400 text-sm md:text-base mb-2">{member.title}</p>
-        <StarRating rating={member.rating} />
-        
-        {/* رابط البريد الإلكتروني */}
-        <a 
-          href={`mailto:${member.email}`} 
-          className="text-neutral-400 text-xs md:text-sm hover:text-teal-400 transition duration-200 block mt-2"
-        >
-          {member.email}
-        </a>
-      </div>
-    </div>
-  );
-};
+const values = [
+  {
+    icon: "💡",
+    title: "Innovation",
+    description: "We turn creative ideas into meaningful experiences.",
+  },
+  {
+    icon: "🤝",
+    title: "Collaboration",
+    description: "Great things happen when different minds work together.",
+  },
+  {
+    icon: "🚀",
+    title: "Growth",
+    description: "We believe in learning, experimenting and improving.",
+  },
+];
 
 export default function TeamPage() {
   return (
-    // الخلفية الأساسية
-    <div id="team-section" className="min-h-screen bg-[#030412] text-white py-12 md:py-24 relative overflow-hidden font-sans">
-      
-      {/* تأثيرات ضبابية للخلفية */}
-      <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
-      <div className="absolute bottom-1/4 right-0 w-80 h-80 bg-pink-500/20 rounded-full mix-blend-multiply filter blur-2xl opacity-30"></div>
+    <main className="min-h-screen overflow-hidden bg-[#0d142c] text-white">
 
-      <div className="container mx-auto max-w-7xl px-4 c-space z-10 relative">
-        {/* العنوان الرئيسي والوصف */}
-        <div className="text-center mb-16 max-w-xl mx-auto">
-          <div className="inline-block p-2 px-8 rounded-full bg-gradient-to-r from-fuchsia-600 to-blue-600 shadow-lg shadow-fuchsia-600/40 mb-4">
-            <h2 className="text-base sm:text-lg font-bold uppercase tracking-wider text-white">
-                Our Team Members
+      {/* Background Effects */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-40 left-1/4 h-96 w-96 rounded-full bg-indigo-600/20 blur-[130px]" />
+        <div className="absolute top-[45%] -right-40 h-96 w-96 rounded-full bg-purple-600/15 blur-[130px]" />
+        <div className="absolute bottom-0 left-0 h-80 w-80 rounded-full bg-blue-600/10 blur-[120px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-16 md:px-10">
+
+        {/* Back Navigation */}
+        <Link
+          to="/"
+          className="mb-12 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-sm text-gray-300 transition hover:border-indigo-400/50 hover:bg-indigo-500/10 hover:text-white"
+        >
+          <span>←</span> Back to Home
+        </Link>
+
+        {/* Hero Section */}
+        <section className="mx-auto mb-24 max-w-3xl text-center">
+
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/10 px-5 py-2 text-sm text-indigo-300">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-indigo-400" />
+            The People Behind Our Vision
+          </div>
+
+          <h1 className="mb-6 text-5xl font-extrabold leading-tight tracking-tight md:text-7xl">
+            Meet Our{" "}
+            <span className="bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              Team
+            </span>
+          </h1>
+
+          <p className="mx-auto max-w-2xl text-base leading-8 text-gray-400 md:text-lg">
+            Behind every great idea is a team of passionate minds.
+            Together, we're creating innovative experiences that
+            make learning smarter, easier, and more exciting.
+          </p>
+
+          <div className="mx-auto mt-10 flex justify-center gap-3">
+            <div className="h-1.5 w-12 rounded-full bg-indigo-500" />
+            <div className="h-1.5 w-4 rounded-full bg-purple-500" />
+            <div className="h-1.5 w-2 rounded-full bg-pink-500" />
+          </div>
+        </section>
+
+        {/* Team Members */}
+        <section className="mb-28">
+
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-indigo-400">
+              Meet The Minds
+            </p>
+
+            <h2 className="text-3xl font-bold md:text-4xl">
+              The Team Behind The Magic
+            </h2>
+
+            <p className="mt-4 text-gray-400">
+              Creative thinkers. Passionate builders. One shared vision.
+            </p>
+          </div>
+
+          <div className="grid gap-7 sm:grid-cols-2 lg:grid-cols-4">
+            {team.map((member, index) => (
+              <div
+                key={member.name}
+                className="group relative overflow-hidden rounded-3xl border border-white/10 bg-[#1e293b]/80 p-7 text-center shadow-xl backdrop-blur-xl transition duration-500 hover:-translate-y-3 hover:border-indigo-400/50 hover:shadow-indigo-500/10"
+                style={{ transitionDelay: `${index * 60}ms` }}
+              >
+                <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-70" />
+
+                {/* Team Member Image */}
+                <div
+                  className={`mx-auto mb-6 h-28 w-28 rounded-full bg-gradient-to-br ${member.color} p-[3px] shadow-lg transition duration-500 group-hover:scale-110 group-hover:shadow-purple-500/30`}
+                >
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    className="h-full w-full rounded-full border-2 border-[#111a33] object-cover"
+                    loading="lazy"
+                  />
+                </div>
+
+                <h3 className="mb-2 text-xl font-bold transition group-hover:text-indigo-300">
+                  {member.name}
+                </h3>
+
+                <p className="mb-5 text-sm font-semibold text-purple-400">
+                  {member.role}
+                </p>
+
+                <div className="mx-auto mb-5 h-px w-12 bg-gradient-to-r from-indigo-500 to-purple-500" />
+
+                <p className="text-sm leading-7 text-gray-400">
+                  {member.description}
+                </p>
+
+                <div className="absolute -bottom-16 -right-16 h-32 w-32 rounded-full bg-purple-500/10 blur-3xl transition group-hover:bg-purple-500/20" />
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Our Values */}
+        <section className="mb-24">
+
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.3em] text-purple-400">
+              What Drives Us
+            </p>
+
+            <h2 className="text-3xl font-bold md:text-4xl">
+              More Than Just A Team
             </h2>
           </div>
-          
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold mb-2 text-indigo-300">
-            MEET OUR TEAM
-          </h1>
-          <p className="text-neutral-400 text-lg md:text-xl">
-            The dedicated minds behind your next coding adventure.
-          </p>
-        </div>
 
-        {/* شبكة البطاقات */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-20"> 
-          {teamMembers.map((member) => (
-            <TeamCard key={member.id} member={member} />
-          ))}
-        </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {values.map((value) => (
+              <div
+                key={value.title}
+                className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1e293b] to-[#151d36] p-8 transition duration-300 hover:-translate-y-2 hover:border-purple-400/40"
+              >
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-indigo-500/15 text-3xl">
+                  {value.icon}
+                </div>
+
+                <h3 className="mb-3 text-xl font-bold">
+                  {value.title}
+                </h3>
+
+                <p className="leading-7 text-gray-400">
+                  {value.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Closing Section */}
+        <section className="relative overflow-hidden rounded-3xl border border-indigo-400/20 bg-gradient-to-br from-indigo-600/20 via-purple-600/10 to-[#1e293b] px-7 py-16 text-center md:px-16">
+
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-purple-500/20 blur-[90px]" />
+
+          <div className="relative z-10">
+            <h2 className="mb-5 text-3xl font-extrabold md:text-4xl">
+              Great Things Are Built Together.
+            </h2>
+
+            <p className="mx-auto mb-9 max-w-xl leading-8 text-gray-400">
+              Every idea starts with curiosity, but teamwork
+              turns that curiosity into something extraordinary.
+            </p>
+          </div>
+        </section>
+
       </div>
-    </div>
+    </main>
   );
 }
+

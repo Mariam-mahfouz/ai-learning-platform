@@ -11,7 +11,7 @@ const IllustrationSection = () => (
         Verify Your Account
       </h1>
       <p className="text-gray-400 text-lg max-w-sm mx-auto">
-        Enter the OTP sent to your email to unlock all the challenges in Algo Arcade!
+        Enter the token sent to your email to unlock all the challenges in Algo Arcade!
       </p>
       <svg
         className="w-40 h-40 mx-auto text-purple-500/70"
@@ -35,7 +35,7 @@ const VerificationForm = () => {
   const navigate = useNavigate();
   const initialEmail = location.state?.email || "";
 
-  const [otp, setOtp] = useState("");
+  const [token, setToken] = useState("");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -46,50 +46,25 @@ const VerificationForm = () => {
   }, [initialEmail]);
 
   const handleVerify = async () => {
-    if (!otp) {
-      setMessage("Please enter the OTP.");
-      return;
-    }
+    if (!token) return;
     setLoading(true);
     setMessage("");
 
-        try {
-            // Debug: log payload we're about to send
-            const payload = { email: initialEmail, otp: otp };
-            console.log("[verify] Sending payload:", payload);
-            const response = await fetch(
-                "https://depi-backend-yfok.vercel.app/auth/verify",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(payload),
-                }
-            );
+    try {
+      const response = await fetch("https://depi-backend-yfok.vercel.app/auth/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token }),
+      });
 
-      let data;
-      try {
-        data = await response.json();
-      } catch (e) {
-        const text = await response.text();
-        console.warn('[verify] response is not JSON:', text);
-        data = { raw: text };
-      }
+      const data = await response.json();
 
-      console.log('[verify] response status:', response.status, 'body:', data);
-
-      // More permissive verification check to handle different backend shapes
-      const serverMsg = data && (data.msg || data.error || data.message);
-      const isVerified = !!(
-        (data && (data.ok || data.success || data.verified)) ||
-        (typeof serverMsg === 'string' && /verified|success/i.test(serverMsg))
-      );
-
-      if (isVerified) {
+      if (data.ok || data.success) {
         setMessage("Your account has been verified successfully! ✅");
-        // Redirect to Login after short delay
-        setTimeout(() => navigate("/login"), 1500);
+        // Redirect to Levels after short delay
+        setTimeout(() => navigate("/levels"), 1500);
       } else {
-        setMessage(serverMsg || "Invalid or expired OTP ❌");
+        setMessage(data.msg || "Invalid or expired token ❌");
       }
     } catch (err) {
       console.error(err);
@@ -108,15 +83,15 @@ const VerificationForm = () => {
 
       <input
         type="text"
-        value={otp}
-        onChange={(e) => setOtp(e.target.value)}
-        placeholder="Enter your OTP"
+        value={token}
+        onChange={(e) => setToken(e.target.value)}
+        placeholder="Enter your token"
         className="w-full px-4 py-2 rounded-lg bg-gray-700 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-purple-500"
       />
 
       <button
         onClick={handleVerify}
-        disabled={loading || !otp}
+        disabled={loading}
         className="w-full mt-4 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl font-semibold transition disabled:opacity-50"
       >
         {loading ? "Verifying..." : "Verify Account"}
